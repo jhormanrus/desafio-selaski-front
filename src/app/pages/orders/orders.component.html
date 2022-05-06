@@ -3,14 +3,14 @@
     <table>
       <thead>
         <tr class="text-left border-b">
-          <th class="p-2">Order number</th>
+          <th class="p-2">N° order</th>
           <th class="p-2">Date time</th>
           <th class="p-2">Provider</th>
           <th class="p-2">Date created</th>
           <th class="p-2">Observation</th>
-          <th class="p-2">Number of products</th>
+          <th class="p-2">N° products</th>
           <th class="p-2">Total value</th>
-          <th class="p-2"></th>
+          <th class="p-2">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -21,10 +21,11 @@
           <td class="p-2">{{ order.DateCreated | date: 'dd/MM/yyy' }}</td>
           <td class="p-2">{{ order.Observation }}</td>
           <td class="p-2">{{ order.Products.length }}</td>
-          <td class="p-2">{{ order.TotalValue.toFixed(2) }}</td>
-          <td>
-            <!-- <button class="btn btn-primary" (click)="null">Edit</button> -->
-            <button (click)="deleteOrder(order.IdOrder)" class="font-bold rounded px-2 py-1 text-white bg-red-500 hover:bg-red-600 active:bg-red-700">-</button>
+          <td class="p-2">${{ order.TotalValue.toFixed(2) }}</td>
+          <td class="flex items-center gap-1 p-1">
+            <button (click)="getOrderProducts(order)" class="rounded px-2 py-1 text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800">Products</button>
+            <button (click)="getOrderProducts(order)" class="rounded px-2 py-1 text-white bg-yellow-300 hover:bg-yellow-400 active:bg-yellow-500">Edit</button>
+            <button (click)="deleteOrder(order.IdOrder)" class="rounded px-2 py-1 text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -40,7 +41,7 @@
       </div>
       <div class="flex flex-col">
         <label for="orderNumber">Order number</label>
-        <input formControlName="orderNumber" type="number" name="orderNumber" id="orderNumber" class="border rounded px-2 py-1">
+        <input formControlName="orderNumber" type="number" min="0" name="orderNumber" id="orderNumber" class="border rounded px-2 py-1">
       </div>
       <div class="flex flex-col">
         <label for="providerName">Provider name</label>
@@ -50,7 +51,138 @@
         <label for="observation">Observation</label>
         <textarea formControlName="observation" name="observation" id="observation" class="border rounded px-2 py-1"></textarea>
       </div>
-      <button (click)="createOrder()" class="rounded px-2 py-1 text-white bg-green-600 hover:bg-green-700 active:bg-green-800" (click)="null">Create</button>
+      <button (click)="createOrder()" class="rounded px-2 py-1 text-white bg-green-600 hover:bg-green-700 active:bg-green-800">Create order</button>
+    </form>
+    <form *ngIf="orderData" [formGroup]="$any(orderForm).get('update')" class="space-y-2">
+      <div class="flex flex-col">
+        <label for="orderNumber">Order number</label>
+        <input formControlName="orderNumber" type="number" min="0" name="orderNumber" id="orderNumber" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="providerName">Provider name</label>
+        <input formControlName="providerName"  type="text" name="providerName" id="providerName" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="observation">Observation</label>
+        <textarea formControlName="observation" name="observation" id="observation" class="border rounded px-2 py-1"></textarea>
+      </div>
+      <button (click)="updateOrder()" class="rounded px-2 py-1 text-white bg-green-600 hover:bg-green-700 active:bg-green-800">Update order</button>
+    </form>
+  </div>
+</div>
+<div *ngIf="productsData" class="flex">
+  <div>
+    <table>
+      <thead>
+        <tr class="text-left border-b">
+          <th class="p-2">Unit</th>
+          <th class="p-2">Description</th>
+          <th class="p-2">SKU</th>
+          <th class="p-2">Quantity</th>
+          <th class="p-2">Quantity Box</th>
+          <th class="p-2">Weight</th>
+          <th class="p-2">Volumen</th>
+          <th class="p-2">Mark</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of productsData" class="border-b">
+          <td class="p-2">{{ product.ValueUnit }}{{ product.Unit }}</td>
+          <td class="p-2">{{ product.Description }}</td>
+          <td class="p-2">{{ product.SKU }}</td>
+          <td class="p-2">{{ product.Quantity }}</td>
+          <td class="p-2">{{ product.QtyBox }}</td>
+          <td class="p-2">{{ product.Weight.toFixed(2) }}</td>
+          <td class="p-2">{{ product.Volumen.toFixed(2) }}</td>
+          <td class="p-2">{{ product.Mark }}</td>
+          <td class="flex items-center gap-1 p-1">
+            <button (click)="setProduct(product)" class="rounded px-2 py-1 text-white bg-yellow-300 hover:bg-yellow-400 active:bg-yellow-500">Edit</button>
+            <button (click)="deleteProduct(product)" class="rounded px-2 py-1 text-white bg-red-500 hover:bg-red-600 active:bg-red-700">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bg-white ml-auto px-4 py-2">
+    <form [formGroup]="$any(productForm).get('create')" class="space-y-2">
+      <div class="flex flex-col">
+        <label for="valueUnit">Unit</label>
+        <div class="flex gap-1">
+          <input formControlName="valueUnit" type="number" min="1" name="valueUnit" id="valueUnit" class="border rounded px-2 py-1">
+          <select formControlName="unit" name="unit" id="unit" class="border rounded px-2 py-1">
+            <option value="cm">cm</option>
+            <option value="kg">kg</option>
+            <option value="libras">libras</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <label for="quantity">Quantity</label>
+        <input formControlName="quantity"  type="number" min="1" name="quantity" id="quantity" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="quantityBox">Quantity box</label>
+        <input formControlName="quantityBox"  type="number" min="1" name="quantityBox" id="quantityBox" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="sku">SKU</label>
+        <input formControlName="sku"  type="text" name="sku" id="sku" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="weight">Weight</label>
+        <input formControlName="weight"  type="number" min="0" name="weight" id="weight" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="volumen">Volumen</label>
+        <input formControlName="volumen"  type="number" min="1" name="volumen" id="volumen" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="mark">Mark</label>
+        <input formControlName="mark"  type="text" name="mark" id="mark" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="description">Description</label>
+        <textarea formControlName="description" name="description" id="description" class="border rounded px-2 py-1"></textarea>
+      </div>
+      <button (click)="createProduct()" class="rounded px-2 py-1 text-white bg-green-600 hover:bg-green-700 active:bg-green-800">Add product</button>
+    </form>
+    <form *ngIf="productData" [formGroup]="$any(productForm).get('update')" class="space-y-2">
+      <div class="flex flex-col">
+        <label for="valueUnit">Unit</label>
+        <div class="flex gap-1">
+          <input formControlName="valueUnit" type="number" min="1" name="valueUnit" id="valueUnit" class="border rounded px-2 py-1">
+          <select formControlName="unit" name="unit" id="unit" class="border rounded px-2 py-1">
+            <option value="cm">cm</option>
+            <option value="kg">kg</option>
+            <option value="libras">libras</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <label for="quantity">Quantity</label>
+        <input formControlName="quantity"  type="number" min="1" name="quantity" id="quantity" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="quantityBox">Quantity box</label>
+        <input formControlName="quantityBox"  type="number" min="1" name="quantityBox" id="quantityBox" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="weight">Weight</label>
+        <input formControlName="weight"  type="number" min="0" name="weight" id="weight" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="volumen">Volumen</label>
+        <input formControlName="volumen"  type="number" min="1" name="volumen" id="volumen" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="mark">Mark</label>
+        <input formControlName="mark"  type="text" name="mark" id="mark" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="description">Description</label>
+        <textarea formControlName="description" name="description" id="description" class="border rounded px-2 py-1"></textarea>
+      </div>
+      <button (click)="updateProduct()" class="rounded px-2 py-1 text-white bg-green-600 hover:bg-green-700 active:bg-green-800">Update product</button>
     </form>
   </div>
 </div>

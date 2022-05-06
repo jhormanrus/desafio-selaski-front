@@ -13,4 +13,6 @@ export interface Order {
   Products:      OrderProduct[];
 }
 
-export type CreateOrder = Omit<Order, 'IdOrder' | 'Products'>
+export type CreateOrder = Omit<Order, 'IdOrder' | 'Products' | 'Status'>
+
+export type UpdateOrder = Omit<Order, 'Products' | 'Status'>

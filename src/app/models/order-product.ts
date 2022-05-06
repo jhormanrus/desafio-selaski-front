@@ -4,7 +4,7 @@ export interface OrderProduct {
   ValueUnit:         number;
   Unit:              string;
   Description:       string;
-  SKU?:              string;
+  SKU:               string;
   Quantity:          number;
   QtyBox:            number;
   Weight:            number;
@@ -12,3 +12,7 @@ export interface OrderProduct {
   Mark:              string;
   Status:            number;
 }
+
+export type CreateOrderProduct = Omit<OrderProduct, 'IdOrdersProducts' | 'Status'>
+
+export type UpdateOrderProduct = Omit<OrderProduct, 'Status'>

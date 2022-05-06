@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { OrderProduct } from '../models/order-product';
+import { CreateOrderProduct, OrderProduct, UpdateOrderProduct } from '../models/order-product';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +21,17 @@ export class OrderProductService {
     return this.http.get<OrderProduct>(endpoint);
   }
 
-  create(order: OrderProduct): Observable<unknown> {
+  getByOrderId(id: number): Observable<OrderProduct[]> {
+    const endpoint = `${environment.apiUrl}/products/order/${id}`;
+    return this.http.get<OrderProduct[]>(endpoint);
+  }
+
+  create(order: CreateOrderProduct): Observable<unknown> {
     const endpoint = `${environment.apiUrl}/products`;
     return this.http.post<unknown>(endpoint, order);
   }
 
-  update(order: OrderProduct): Observable<unknown> {
+  update(order: UpdateOrderProduct): Observable<unknown> {
     const endpoint = `${environment.apiUrl}/products/${order.IdOrdersProducts}`;
     return this.http.put<unknown>(endpoint, order);
   }
