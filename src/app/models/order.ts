@@ -10,6 +10,7 @@ export interface Order {
   Observation:   string;
   TotalValue:    number;
   Status:        number;
+  PayOrder:      string;
   Products:      OrderProduct[];
 }
 

@@ -12,6 +12,7 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class OrdersComponent implements OnInit {
 
+  idUser!: number
   ordersData!: Order[]
   orderData!: Order | undefined
   usersData!: User[]
@@ -20,18 +21,27 @@ export class OrdersComponent implements OnInit {
   constructor(private sOrder: OrderService, private sUser: UserService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.idUser = this.parseJwt(localStorage.getItem('token')!).IdUser
     this.initOrderForm()
     this.orderForm.disable()
     this.getAllOrders()
     this.getAllUsers()
   }
 
+  parseJwt(token: string) {
+    const base64Url = token.split('.')[1]
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(''))
+    return JSON.parse(jsonPayload)
+  }
 
   /**
    * Gets all orders and sets them to ordersData
    */
   getAllOrders() {
-    this.sOrder.getByUserId(2).subscribe({
+    this.sOrder.getByUserId(this.idUser).subscribe({
       next: (data) => {
         this.ordersData = data.filter(order => order.Status === 1)
         this.orderForm.enable()
@@ -63,13 +73,14 @@ export class OrdersComponent implements OnInit {
    */
   createOrder() {
     const order: CreateOrder = {
-      IdUser: this.orderForm.value.create.idUser,
+      IdUser: this.idUser,
       OrderNumber: this.orderForm.value.create.orderNumber,
       DateTime: new Date().toJSON().slice(0, 19).replace('T', ' '),
       ProviderName: this.orderForm.value.create.providerName,
       DateCreated: new Date().toJSON().slice(0, 19).replace('T', ' '),
       Observation: this.orderForm.value.create.observation,
-      TotalValue: 0
+      TotalValue: 0,
+      PayOrder: this.orderForm.value.create.payOrder
     }
     this.sOrder.create(order).subscribe({
       next: (data) => {
@@ -95,7 +106,8 @@ export class OrdersComponent implements OnInit {
       ProviderName: this.orderForm.value.update.providerName,
       DateCreated: new Date(this.orderData!.DateCreated).toJSON().slice(0, 19).replace('T', ' '),
       Observation: this.orderForm.value.update.observation,
-      TotalValue: this.orderData!.TotalValue
+      TotalValue: this.orderData!.TotalValue,
+      PayOrder: this.orderForm.value.update.payOrder
     }
     this.sOrder.update(order).subscribe({
       next: (data) => {
@@ -139,15 +151,16 @@ export class OrdersComponent implements OnInit {
   initOrderForm() {
     this.orderForm = this.fb.group({
       create: this.fb.group({
-        idUser: this.fb.control(null, [Validators.required]),
         orderNumber: this.fb.control(null, [Validators.required]),
         providerName: this.fb.control(null, [Validators.required]),
-        observation: this.fb.control(null, [Validators.required])
+        observation: this.fb.control(null, [Validators.required]),
+        payOrder: this.fb.control(null, [Validators.required])
       }),
       update: this.fb.group({
         orderNumber: this.fb.control(null, [Validators.required]),
         providerName: this.fb.control(null, [Validators.required]),
-        observation: this.fb.control(null, [Validators.required])
+        observation: this.fb.control(null, [Validators.required]),
+        payOrder: this.fb.control(null, [Validators.required])
       })
     })
   }
