@@ -29,7 +29,7 @@ export class ProductsComponent implements OnInit {
 
   /**
    * Gets products by order id and sets them to productsData
-   * @param id - IdOrder to get products
+   * @param id - Order.IdOrder to get products
    */
   getOrderProducts(id: number) {
     this.sProduct.getByOrderId(id).subscribe({
