@@ -13,7 +13,7 @@ export class ProductsComponent implements OnInit {
 
   orderId!: number
   productsData!: OrderProduct[]
-  productData!: OrderProduct
+  productData!: OrderProduct | undefined
   productForm!: FormGroup
 
   constructor(private sProduct: OrderProductService, private route: ActivatedRoute, private fb: FormBuilder) { }
@@ -92,12 +92,12 @@ export class ProductsComponent implements OnInit {
    */
   updateProduct() {
     const product: UpdateOrderProduct = {
-      IdOrdersProducts: this.productData.IdOrdersProducts,
-      IdOrder: this.productData.IdOrder,
+      IdOrdersProducts: this.productData!.IdOrdersProducts,
+      IdOrder: this.productData!.IdOrder,
       ValueUnit: this.productForm.value.update.valueUnit,
       Unit: this.productForm.value.update.unit,
       Description: this.productForm.value.update.description,
-      SKU: this.productData.SKU,
+      SKU: this.productData!.SKU,
       Quantity: this.productForm.value.update.quantity,
       QtyBox: this.productForm.value.update.quantityBox,
       Weight: this.productForm.value.update.weight,

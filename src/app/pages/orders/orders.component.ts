@@ -21,6 +21,7 @@ export class OrdersComponent implements OnInit {
 
   ngOnInit(): void {
     this.initOrderForm()
+    this.orderForm.disable()
     this.getAllOrders()
     this.getAllUsers()
   }
@@ -33,6 +34,7 @@ export class OrdersComponent implements OnInit {
     this.sOrder.getByUserId(2).subscribe({
       next: (data) => {
         this.ordersData = data.filter(order => order.Status === 1)
+        this.orderForm.enable()
       },
       error: (err) => {
         console.error(err);

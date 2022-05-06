@@ -1,6 +1,7 @@
 <div class="fixed flex w-full h-full">
   <div class="w-full px-6 py-8">
-    <table class="table">
+    <span *ngIf="!productsData" class="text-xl">Loading ...</span>
+    <table *ngIf="productsData" class="table">
       <thead>
         <tr>
           <th>Unit</th>
@@ -73,9 +74,13 @@
         <label for="description">Description</label>
         <textarea formControlName="description" name="description" id="description" class="input rounded px-2 py-1"></textarea>
       </div>
-      <button (click)="createProduct()" class="btn btn__green mt-6">Add product</button>
+      <span class="text-red-700 text-sm">* All inputs are required</span>
+      <button (click)="createProduct()" [disabled]="!productsData || $any(productForm).get('create').invalid" class="btn btn__green mt-6">Add product</button>
     </form>
     <form *ngIf="productData" [formGroup]="$any(productForm).get('update')" class="flex flex-col gap-2">
+      <div class="flex mb-3">
+        <button (click)="productData = undefined" type="button" class="btn btn__ghost">← add product</button>
+      </div>
       <div class="flex flex-col">
         <label for="valueUnit">Unit</label>
         <div class="flex gap-1">
@@ -111,7 +116,8 @@
         <label for="description">Description</label>
         <textarea formControlName="description" name="description" id="description" class="input rounded px-2 py-1"></textarea>
       </div>
-      <button (click)="updateProduct()" class="btn btn__green mt-6">Update product</button>
+      <span class="text-red-700 text-sm">* All inputs are required</span>
+      <button (click)="updateProduct()" [disabled]="$any(productForm).get('update').invalid" class="btn btn__green mt-6">Update product</button>
     </form>
   </div>
 </div>

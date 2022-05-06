@@ -1,6 +1,10 @@
 <div class="fixed flex w-full h-full overflow-auto">
   <div class="w-full px-6 py-8">
-    <table class="table">
+    <span *ngIf="!ordersData" class="text-xl">
+      Loading ...<br>
+      <span class="text-sm">Sometimes rest api likes to sleep well</span>
+    </span>
+    <table *ngIf="ordersData" class="table">
       <thead>
         <tr>
           <th>N° order</th>
@@ -51,7 +55,8 @@
         <label for="observation">Observation</label>
         <textarea formControlName="observation" name="observation" id="observation" class="input"></textarea>
       </div>
-      <button (click)="createOrder()" [disabled]="$any(orderForm).get('create').invalid" class="btn btn__green mt-6">Create order</button>
+      <span class="text-red-700 text-sm">* All inputs are required</span>
+      <button (click)="createOrder()" [disabled]="!ordersData || $any(orderForm).get('create').invalid" class="btn btn__green mt-6">Create order</button>
     </form>
     <form *ngIf="orderData" [formGroup]="$any(orderForm).get('update')" class="flex flex-col gap-2">
       <div class="flex mb-3">
@@ -69,6 +74,7 @@
         <label for="observation">Observation</label>
         <textarea formControlName="observation" name="observation" id="observation" class="input"></textarea>
       </div>
+      <span class="text-red-700 text-sm">* All inputs are required</span>
       <button type="submit" (click)="updateOrder()" [disabled]="$any(orderForm).get('update').invalid" class="btn btn__green mt-6">Update order</button>
     </form>
   </div>
