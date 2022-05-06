@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Order } from '../models/order';
+import { CreateOrder, Order } from '../models/order';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,12 @@ export class OrderService {
     return this.http.get<Order>(endpoint);
   }
 
-  create(order: Order): Observable<unknown> {
+  getByUserId(id: number): Observable<Order[]> {
+    const endpoint = `${environment.apiUrl}/orders/user/${id}`;
+    return this.http.get<Order[]>(endpoint);
+  }
+
+  create(order: CreateOrder): Observable<unknown> {
     const endpoint = `${environment.apiUrl}/orders`;
     return this.http.post<unknown>(endpoint, order);
   }

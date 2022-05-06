@@ -1,11 +1,16 @@
+import { OrderProduct } from "./order-product";
+
 export interface Order {
-  IdOrder?:      number;
+  IdOrder:       number;
   IdUser:        number;
   OrderNumber:   number;
-  DateTime:      Date;
+  DateTime:      string;
   ProviderName:  string;
-  DateCreated:   Date;
+  DateCreated:   string;
   Observation:   string;
   TotalValue:    number;
   Status:        number;
+  Products:      OrderProduct[];
 }
+
+export type CreateOrder = Omit<Order, 'IdOrder' | 'Products'>

@@ -1,1 +1,21 @@
-<p>users works!</p>
+<table>
+  <thead>
+    <tr class="text-left border-b">
+      <th class="p-2">Name</th>
+      <th class="p-2">Email</th>
+      <th class="p-2">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of usersData" class="border-b">
+      <td class="p-2">{{ user.Name }}</td>
+      <td class="p-2">{{ user.Email }}</td>
+      <td class="p-2">
+        <span class="flex items-center gap-1">
+          <div [ngClass]="user.Status? 'bg-green-800' : 'bg-red-700'" class="w-2 h-2 rounded-full"></div>
+          {{ user.Status? 'Active' : 'Inactive' }}
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>

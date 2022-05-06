@@ -1,5 +1,5 @@
 export interface OrderProduct {
-  IdOrdersProducts?: number;
+  IdOrdersProducts:  number;
   IdOrder:           number;
   ValueUnit:         number;
   Unit:              string;

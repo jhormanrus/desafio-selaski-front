@@ -1,1 +1,56 @@
-<p>orders works!</p>
+<div class="flex h-full">
+  <div>
+    <table>
+      <thead>
+        <tr class="text-left border-b">
+          <th class="p-2">Order number</th>
+          <th class="p-2">Date time</th>
+          <th class="p-2">Provider</th>
+          <th class="p-2">Date created</th>
+          <th class="p-2">Observation</th>
+          <th class="p-2">Number of products</th>
+          <th class="p-2">Total value</th>
+          <th class="p-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of ordersData" class="border-b">
+          <td class="p-2">{{ order.OrderNumber }}</td>
+          <td class="p-2">{{ order.DateTime | date: 'dd/MM/yyyy hh:mm a' }}</td>
+          <td class="p-2">{{ order.ProviderName }}</td>
+          <td class="p-2">{{ order.DateCreated | date: 'dd/MM/yyy' }}</td>
+          <td class="p-2">{{ order.Observation }}</td>
+          <td class="p-2">{{ order.Products.length }}</td>
+          <td class="p-2">{{ order.TotalValue.toFixed(2) }}</td>
+          <td>
+            <!-- <button class="btn btn-primary" (click)="null">Edit</button> -->
+            <button (click)="deleteOrder(order.IdOrder)" class="font-bold rounded px-2 py-1 text-white bg-red-500 hover:bg-red-600 active:bg-red-700">-</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="bg-white ml-auto px-4 py-2">
+    <form [formGroup]="$any(orderForm).get('create')" class="space-y-2">
+      <div class="flex flex-col">
+        <label for="user">User</label>
+        <select formControlName="idUser" name="users" id="user" class="border rounded px-2 py-1">
+          <option *ngFor="let user of usersData" [value]="user.IdUser">{{ user.Name }}</option>
+        </select>
+      </div>
+      <div class="flex flex-col">
+        <label for="orderNumber">Order number</label>
+        <input formControlName="orderNumber" type="number" name="orderNumber" id="orderNumber" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="providerName">Provider name</label>
+        <input formControlName="providerName"  type="text" name="providerName" id="providerName" class="border rounded px-2 py-1">
+      </div>
+      <div class="flex flex-col">
+        <label for="observation">Observation</label>
+        <textarea formControlName="observation" name="observation" id="observation" class="border rounded px-2 py-1"></textarea>
+      </div>
+      <button (click)="createOrder()" class="rounded px-2 py-1 text-white bg-green-600 hover:bg-green-700 active:bg-green-800" (click)="null">Create</button>
+    </form>
+  </div>
+</div>
