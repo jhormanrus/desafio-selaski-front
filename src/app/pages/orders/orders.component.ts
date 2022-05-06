@@ -24,7 +24,7 @@ export class OrdersComponent implements OnInit {
     this.idUser = this.parseJwt(localStorage.getItem('token')!).IdUser
     this.initOrderForm()
     this.orderForm.disable()
-    this.getAllOrders()
+    if (this.idUser) this.getAllOrders()
     this.getAllUsers()
   }
 
