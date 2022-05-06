@@ -3,3 +3,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn {
+  @apply rounded px-2 py-1 text-white disabled:opacity-60 disabled:cursor-not-allowed;
+}
+
+.btn__green {
+  @apply bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 disabled:hover:bg-emerald-600;
+}
+
+.btn__blue {
+  @apply bg-sky-600 hover:bg-sky-700 active:bg-sky-800 disabled:hover:bg-sky-600;
+}
+
+.btn__yellow {
+  @apply bg-amber-400 hover:bg-amber-500 active:bg-amber-600 disabled:hover:bg-amber-400;
+}
+
+.btn__red {
+  @apply bg-orange-500 hover:bg-orange-600 active:bg-orange-700 disabled:hover:bg-orange-500;
+}
+
+.btn__ghost {
+  @apply text-black text-sm hover:bg-gray-100 active:bg-gray-200;
+}
+
+.input {
+  @apply bg-gray-200 hover:bg-gray-100 focus:bg-gray-100 rounded px-2 py-1;
+}
+
+.table tr {
+  @apply border-b;
+}
+
+.table thead tr {
+  @apply text-left;
+}
+
+.table th, .table td {
+  @apply p-2;
+}
